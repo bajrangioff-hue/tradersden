@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests that make network calls (e.g. yfinance)",
+    "db: marks tests that require a live PostgreSQL database",
+]
