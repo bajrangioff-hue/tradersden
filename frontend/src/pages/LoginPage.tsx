@@ -25,6 +25,7 @@ const LoginPage: React.FC = () => {
   }, [toast]);
 
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
+  const apiBase = import.meta.env.VITE_API_BASE_URL ?? '';
 
   useEffect(() => {
     if (!googleClientId) return;
@@ -35,23 +36,23 @@ const LoginPage: React.FC = () => {
     document.body.appendChild(s);
   }, [googleClientId]);
 
-  const handleGoogle = () => {
-    if (!googleClientId) { setToast('Google sign in coming soon'); return; }
+  const handleGoogle = async () => {
+    if (!googleClientId) { setToast('VITE_GOOGLE_CLIENT_ID not set'); return; }
+    if (!(window as any).google?.accounts?.oauth2) { setToast('Google Identity Services not loaded'); return; }
     try {
-      const { google } = window as unknown as { google: { accounts: { oauth2: { initTokenClient: (cfg: { client_id: string; scope: string; callback: (resp: { access_token: string }) => void }) => { requestAccessToken: () => void } } } } };
-      const client = google.accounts.oauth2.initTokenClient({
+      const client = (window as any).google.accounts.oauth2.initTokenClient({
         client_id: googleClientId,
         scope: 'openid email profile',
-        callback: async (tokenResponse) => {
+        callback: async (tokenResponse: { access_token: string }) => {
           try {
-            const resp = await fetch('/api/v1/auth/google', {
+            const resp = await fetch(`${apiBase}/api/v1/auth/google`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ access_token: tokenResponse.access_token }),
             });
             if (resp.ok) {
               const tokens = await resp.json();
-              const meResp = await fetch('/api/v1/auth/me', {
+              const meResp = await fetch(`${apiBase}/api/v1/auth/me`, {
                 headers: { Authorization: `Bearer ${tokens.access_token}` },
               });
               if (meResp.ok) {
@@ -62,15 +63,16 @@ const LoginPage: React.FC = () => {
                 return;
               }
             }
-            setToast('Google sign in failed — try email instead');
-          } catch {
-            setToast('Google sign in failed — try email instead');
+            const body = await resp.json().catch(() => ({}));
+            setToast(body?.detail || 'Google sign in failed — try email instead');
+          } catch (e) {
+            setToast(`Network error — backend unreachable at ${apiBase}`);
           }
         },
       });
       client.requestAccessToken();
-    } catch {
-      setToast('Google sign in coming soon');
+    } catch (e) {
+      setToast('Google sign in failed');
     }
   };
 
