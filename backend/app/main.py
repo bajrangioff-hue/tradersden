@@ -13,15 +13,7 @@ from app.core.database import close_db, init_db
 from app.exceptions.custom_exceptions import AppException
 from app.middleware.error_handler import app_exception_handler
 from app.middleware.logging import RequestLoggingMiddleware
-
-try:
-    from app.middleware.rate_limiter import limiter
-    from slowapi import _rate_limit_exceeded_handler
-    from slowapi.errors import RateLimitExceeded
-    _slowapi_available = True
-except ImportError:
-    _slowapi_available = False
-    limiter = None
+from app.middleware.rate_limiter import limiter
 
 logging.basicConfig(
     level=getattr(logging, settings.LOG_LEVEL.upper(), logging.INFO),
@@ -35,8 +27,7 @@ logger = logging.getLogger("tradepro.api")
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info("Starting %s v%s", settings.APP_TITLE, settings.APP_VERSION)
     app.state.cors_origins = settings.CORS_ORIGINS
-    if _slowapi_available:
-        app.state.limiter = limiter
+    app.state.limiter = limiter
 
     try:
         await init_db()
@@ -90,8 +81,13 @@ def create_app() -> FastAPI:
 
     app.add_middleware(RequestLoggingMiddleware)
 
-    if _slowapi_available:
+    try:
+        from slowapi import _rate_limit_exceeded_handler
+        from slowapi.errors import RateLimitExceeded
+        app.state.limiter = limiter
         app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+    except Exception as e:
+        print(f"Rate limiting disabled: {e}")
     app.add_exception_handler(AppException, app_exception_handler)
 
     app.include_router(v1_router)
