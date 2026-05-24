@@ -12,7 +12,6 @@ from slowapi.errors import RateLimitExceeded
 from app.api.v1.router import router as v1_router
 from app.core.config import settings
 from app.core.database import close_db, init_db
-from app.core.redis import close_redis, get_redis
 from app.exceptions.custom_exceptions import AppException
 from app.middleware.error_handler import app_exception_handler
 from app.middleware.logging import RequestLoggingMiddleware
@@ -28,7 +27,6 @@ logger = logging.getLogger("tradepro.api")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    """Application lifespan — runs startup and shutdown logic."""
     logger.info("Starting %s v%s", settings.APP_TITLE, settings.APP_VERSION)
     app.state.cors_origins = settings.CORS_ORIGINS
     app.state.limiter = limiter
@@ -39,25 +37,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     except Exception:
         logger.warning("Database init skipped — DB unavailable")
 
-    try:
-        await get_redis()
-        logger.info("Redis connected")
-    except Exception:
-        logger.warning("Redis unavailable — skipping")
-
     yield
 
     await close_db()
-    await close_redis()
     logger.info("Shutting down %s", settings.APP_TITLE)
 
 
 def create_app() -> FastAPI:
-    """Create and configure the FastAPI application.
-
-    Returns:
-        Configured FastAPI instance with middleware, routers, and exception handlers.
-    """
     app = FastAPI(
         title=settings.APP_TITLE,
         description="Institutional trading analysis framework — "
@@ -80,9 +66,16 @@ def create_app() -> FastAPI:
             allow_headers=["*"],
         )
     else:
+        local = [
+            "http://localhost:5173",
+            "http://localhost:5174",
+            "http://localhost:3000",
+            "http://127.0.0.1:5173",
+        ]
+        merged = list(dict.fromkeys(origins + local))
         app.add_middleware(
             CORSMiddleware,
-            allow_origins=origins,
+            allow_origins=merged,
             allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"],

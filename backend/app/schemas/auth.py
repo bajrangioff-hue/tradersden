@@ -45,3 +45,7 @@ class UserUpdateRequest(BaseModel):
 
 class PreferencesUpdate(BaseModel):
     preferences: dict
+
+
+class GoogleAuthRequest(BaseModel):
+    access_token: str

@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from app.api.v1 import analyze, auth, calendar, confluence, health, market, news, scanner, setups, tags, trades, users
+from app.api.v1 import analyze, auth, calendar, confluence, dashboard, health, market, news, scanner, setups, tags, trades, users
 
 router = APIRouter(prefix="/api/v1")
 router.include_router(health.router)
@@ -17,3 +17,4 @@ router.include_router(calendar.router)
 router.include_router(news.router)
 router.include_router(scanner.router)
 router.include_router(market.router)
+router.include_router(dashboard.router)

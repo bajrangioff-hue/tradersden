@@ -1,37 +1,26 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-dist/
-*.egg
-.venv/
-venv/
-
-# Node
 node_modules/
-frontend/dist/
-
-# Environment
+dist/
 .env
-*.env.local
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
+.env.local
+.env.production
 *.log
 *.err
-
-# Database
+backend/index.js
+backend/prisma/
+backend/src/
+backend/package*.json
+backend/prisma.config.ts
+*.err
+*.log
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
 *.db
 *.sqlite
-
-# Docker
-.docker/
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+htmlcov/
+.coverage

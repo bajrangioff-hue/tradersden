@@ -8,6 +8,7 @@ from app.core.database import get_db
 from app.middleware.rate_limiter import limiter
 from app.models.user import User
 from app.schemas.auth import (
+    GoogleAuthRequest,
     LoginRequest,
     RefreshRequest,
     RegisterRequest,
@@ -89,6 +90,23 @@ async def logout(
     db: AsyncSession = Depends(get_db),
 ) -> None:
     await auth_service.logout_user(db, str(current_user.id))
+
+
+@router.post(
+    "/auth/google",
+    response_model=TokenResponse,
+    summary="Google OAuth",
+    description="Authenticate with a Google access token from GIS. Creates account if new.",
+)
+async def google_login(
+    body: GoogleAuthRequest,
+    db: AsyncSession = Depends(get_db),
+) -> TokenResponse:
+    try:
+        result = await auth_service.google_auth(db, access_token=body.access_token)
+        return TokenResponse(**result)
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(exc))
 
 
 @router.get(

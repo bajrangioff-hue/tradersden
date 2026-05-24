@@ -14,7 +14,7 @@ function strengthCheck(pw: string) {
 }
 
 const STRENGTH_LABELS = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
-const STRENGTH_COLORS = ['', '#EF4444', '#F59E0B', '#F0B90B', '#22C55E', '#22C55E'];
+const STRENGTH_COLORS = ['', '#E17055', '#F59E0B', '#6C5CE7', '#00B894', '#00B894'];
 
 const SignupPage: React.FC = () => {
   const { register, loading, error, clearError, isAuthenticated } = useAuth();
@@ -29,7 +29,7 @@ const SignupPage: React.FC = () => {
   const passwordsMatch = password === confirmPassword;
 
   useEffect(() => {
-    if (isAuthenticated) navigate('/', { replace: true });
+    if (isAuthenticated) navigate('/dashboard', { replace: true });
   }, [isAuthenticated, navigate]);
 
   useEffect(() => {
@@ -57,88 +57,89 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--bg-app)' }}>
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full opacity-[0.08]" style={{ background: 'radial-gradient(circle, var(--accent), transparent)' }} />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full opacity-[0.06]" style={{ background: 'radial-gradient(circle, var(--accent), transparent)' }} />
-      </div>
-
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#F8F9FC' }}>
       <div
-        className="relative w-full max-w-md rounded-2xl p-8"
+        className="w-full max-w-md"
         style={{
-          background: 'rgba(17, 17, 19, 0.85)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          border: '1px solid rgba(255, 255, 255, 0.06)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+          background: '#FFFFFF',
+          border: '1px solid #EEF0F3',
+          borderRadius: 12,
+          boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+          padding: 40,
         }}
       >
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center font-black text-2xl mx-auto mb-4" style={{ background: 'var(--accent)' }}>
-            <span className="text-black">B</span>
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center font-black text-2xl mx-auto mb-4"
+            style={{ background: '#6C5CE7' }}
+          >
+            <span style={{ color: '#FFFFFF' }}>B</span>
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-[var(--text-primary)]">Create Account</h1>
-          <p className="text-sm text-[var(--text-tertiary)] mt-1">Join {BRAND.name}</p>
+          <h1 className="text-xl font-bold tracking-tight" style={{ color: '#1A202C' }}>Create Account</h1>
+          <p className="text-sm mt-1" style={{ color: '#9CA3AF' }}>Join {BRAND.name}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Email</label>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#4A5568' }}>Email</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg text-sm text-[var(--text-primary)] placeholder:text-[var(--text-dim)] outline-none transition-all"
+              className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all"
               style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                color: '#1A202C',
+                background: '#F8F9FC',
+                border: '1px solid #EEF0F3',
               }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = '0 0 0 1px var(--accent-dim)'; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#6C5CE7'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#EEF0F3'; }}
               placeholder="you@example.com"
               autoComplete="email"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Display Name (optional)</label>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#4A5568' }}>Display Name (optional)</label>
             <input
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg text-sm text-[var(--text-primary)] placeholder:text-[var(--text-dim)] outline-none transition-all"
+              className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all"
               style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                color: '#1A202C',
+                background: '#F8F9FC',
+                border: '1px solid #EEF0F3',
               }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = '0 0 0 1px var(--accent-dim)'; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#6C5CE7'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#EEF0F3'; }}
               placeholder="Trader Name"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Password</label>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#4A5568' }}>Password</label>
             <input
               type="password"
               required
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg text-sm text-[var(--text-primary)] placeholder:text-[var(--text-dim)] outline-none transition-all"
+              className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all"
               style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                color: '#1A202C',
+                background: '#F8F9FC',
+                border: '1px solid #EEF0F3',
               }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.boxShadow = '0 0 0 1px var(--accent-dim)'; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = '#6C5CE7'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = '#EEF0F3'; }}
               placeholder="Min 8 characters"
               autoComplete="new-password"
             />
             {password.length > 0 && (
               <div className="mt-2 flex items-center gap-2">
-                <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: '#EEF0F3' }}>
                   <div
                     className="h-full rounded-full transition-all duration-300"
                     style={{
@@ -147,7 +148,7 @@ const SignupPage: React.FC = () => {
                     }}
                   />
                 </div>
-                <span className="text-[10px] font-medium" style={{ color: STRENGTH_COLORS[strength] || 'var(--text-dim)' }}>
+                <span className="text-[10px] font-medium" style={{ color: STRENGTH_COLORS[strength] || '#9CA3AF' }}>
                   {STRENGTH_LABELS[strength]}
                 </span>
               </div>
@@ -155,31 +156,32 @@ const SignupPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[var(--text-secondary)] mb-1.5">Confirm Password</label>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: '#4A5568' }}>Confirm Password</label>
             <input
               type="password"
               required
               minLength={8}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg text-sm text-[var(--text-primary)] placeholder:text-[var(--text-dim)] outline-none transition-all"
+              className="w-full px-3 py-2.5 rounded-lg text-sm outline-none transition-all"
               style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderColor: confirmPassword && !passwordsMatch ? 'var(--fail)' : 'rgba(255,255,255,0.08)',
+                color: '#1A202C',
+                background: '#F8F9FC',
+                border: '1px solid #EEF0F3',
+                borderColor: confirmPassword && !passwordsMatch ? '#E17055' : '#EEF0F3',
               }}
-              onFocus={(e) => { e.currentTarget.style.borderColor = confirmPassword && !passwordsMatch ? 'var(--fail)' : 'var(--accent)'; e.currentTarget.style.boxShadow = '0 0 0 1px var(--accent-dim)'; }}
-              onBlur={(e) => { e.currentTarget.style.borderColor = confirmPassword && !passwordsMatch ? 'var(--fail)' : 'rgba(255,255,255,0.08)'; e.currentTarget.style.boxShadow = 'none'; }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = confirmPassword && !passwordsMatch ? '#E17055' : '#6C5CE7'; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = confirmPassword && !passwordsMatch ? '#E17055' : '#EEF0F3'; }}
               placeholder="Re-enter password"
               autoComplete="new-password"
             />
             {confirmPassword && !passwordsMatch && (
-              <div className="mt-1 text-[10px] text-[var(--fail)]">Passwords do not match</div>
+              <div className="mt-1 text-[10px]" style={{ color: '#E17055' }}>Passwords do not match</div>
             )}
           </div>
 
           {(error || localError) && (
-            <div className="text-xs text-[var(--fail)] rounded-lg px-3 py-2 leading-relaxed" style={{ background: 'rgba(239,68,68,0.1)' }}>
+            <div className="text-xs rounded-lg px-3 py-2 leading-relaxed" style={{ color: '#E17055', background: 'rgba(225,112,85,0.10)' }}>
               {localError || error}
             </div>
           )}
@@ -188,14 +190,14 @@ const SignupPage: React.FC = () => {
             type="submit"
             disabled={loading}
             className="w-full py-2.5 rounded-lg text-sm font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all border-none"
-            style={{ background: 'var(--accent)', color: '#000' }}
-            onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = 'var(--accent-hover)'; }}
-            onMouseLeave={(e) => { if (!loading) e.currentTarget.style.background = 'var(--accent)'; }}
+            style={{ background: '#6C5CE7', color: '#FFFFFF' }}
+            onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = '#5A4BD1'; }}
+            onMouseLeave={(e) => { if (!loading) e.currentTarget.style.background = '#6C5CE7'; }}
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
-                <span className="inline-block w-3.5 h-3.5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                Creating account...
+                <span className="inline-block w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Creating account...</span>
               </span>
             ) : (
               'Create Account'
@@ -206,7 +208,10 @@ const SignupPage: React.FC = () => {
         <div className="mt-6 text-center">
           <Link
             to="/login"
-            className="text-xs text-[var(--text-tertiary)] hover:text-[var(--accent)] transition-colors"
+            className="text-xs transition-colors"
+            style={{ color: '#9CA3AF' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#6C5CE7'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = '#9CA3AF'; }}
           >
             Already have an account? <span className="font-semibold">Sign In</span>
           </Link>

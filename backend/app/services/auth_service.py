@@ -5,6 +5,8 @@ from datetime import datetime, timedelta, timezone
 from typing import Any
 from uuid import UUID
 
+import httpx
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -97,6 +99,44 @@ async def refresh_access_token(
 
     tokens = await _issue_tokens(db, user)
     return tokens
+
+
+async def google_auth(
+    db: AsyncSession,
+    access_token: str,
+) -> dict[str, Any]:
+    async with httpx.AsyncClient(timeout=10) as client:
+        resp = await client.get(
+            "https://www.googleapis.com/oauth2/v3/tokeninfo",
+            params={"access_token": access_token},
+        )
+        if resp.status_code != 200:
+            raise ValueError("Invalid Google token")
+        info = resp.json()
+
+    email = info.get("email")
+    if not email:
+        raise ValueError("Google account has no email")
+
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalar_one_or_none()
+
+    if user is None:
+        user = User(
+            email=email,
+            display_name=info.get("name", email.split("@")[0]),
+            avatar_url=info.get("picture"),
+            is_verified=info.get("email_verified", False),
+        )
+        db.add(user)
+        await db.flush()
+        await db.refresh(user)
+
+    if not user.is_active:
+        raise ValueError("Account is deactivated")
+
+    tokens = await _issue_tokens(db, user)
+    return {"id": str(user.id), "email": user.email, **tokens}
 
 
 async def logout_user(db: AsyncSession, user_id: str) -> None:

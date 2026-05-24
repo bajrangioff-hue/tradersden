@@ -7,10 +7,10 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#F8F9FC' }}>
         <div className="flex items-center gap-3">
-          <span className="inline-block w-4 h-4 border-2 border-[var(--accent)]/30 border-t-[var(--accent)] rounded-full animate-spin" />
-          <span className="text-sm text-[var(--text-tertiary)]">Loading...</span>
+          <span className="inline-block w-4 h-4 border-2 border-[#6C5CE7]/30 border-t-[#6C5CE7] rounded-full animate-spin" />
+          <span className="text-sm" style={{ color: '#9CA3AF' }}>Loading...</span>
         </div>
       </div>
     );

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Upload, X, Image } from 'lucide-react';
+import { X, Image } from 'lucide-react';
 
 interface ScreenshotUploadProps {
   tradeId: string;
@@ -21,17 +21,15 @@ const ScreenshotUpload: React.FC<ScreenshotUploadProps> = ({ tradeId, onUploaded
 
     setUploading(true);
     try {
+      const tokens = JSON.parse(localStorage.getItem('bt_tokens') || '{}');
       const formData = new FormData();
       formData.append('file', file);
       formData.append('trade_id', tradeId);
-
-      const tokens = JSON.parse(localStorage.getItem('bt_tokens') || '{}');
       const resp = await fetch('/api/v1/upload/screenshot', {
         method: 'POST',
         headers: { Authorization: `Bearer ${tokens.access_token}` },
         body: formData,
       });
-
       if (resp.ok) {
         const data = await resp.json();
         onUploaded?.(data.url);
@@ -47,27 +45,28 @@ const ScreenshotUpload: React.FC<ScreenshotUploadProps> = ({ tradeId, onUploaded
     <div>
       <input ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" onChange={handleFile} className="hidden" />
       {preview ? (
-        <div className="relative inline-block rounded-lg overflow-hidden" style={{ border: 'var(--border-subtle)' }}>
+        <div className="relative inline-block rounded-lg overflow-hidden" style={{ border: '1px solid #EEF0F3' }}>
           <img src={preview} alt="Screenshot" className="max-h-32 object-contain" />
           <button
             onClick={() => setPreview(null)}
-            className="absolute top-1 right-1 p-0.5 rounded bg-black/60 text-white cursor-pointer border-none"
+            className="absolute top-1 right-1 p-0.5 rounded cursor-pointer border-none"
+            style={{ background: 'rgba(0,0,0,0.60)', color: '#FFFFFF' }}
           >
             <X size={12} />
           </button>
           {uploading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-              <span className="text-xs font-mono text-white">Uploading...</span>
+            <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'rgba(0,0,0,0.40)' }}>
+              <span className="text-[12px]" style={{ color: '#FFFFFF' }}>Uploading...</span>
             </div>
           )}
         </div>
       ) : (
         <button
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-medium cursor-pointer border-none transition-all"
-          style={{ background: 'rgba(255,255,255,0.04)', color: 'var(--text-tertiary)', border: '1px dashed rgba(255,255,255,0.12)' }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-medium cursor-pointer border-none transition-all"
+          style={{ color: '#9CA3AF', border: '1px dashed #D1D5DB' }}
+          onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#6C5CE7'; e.currentTarget.style.color = '#6C5CE7'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#D1D5DB'; e.currentTarget.style.color = '#9CA3AF'; }}
         >
           <Image size={12} />
           Screenshot

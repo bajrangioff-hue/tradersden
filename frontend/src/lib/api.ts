@@ -228,3 +228,57 @@ export async function fetchOHLCV(symbol: string, interval = '1h', range = '1mo')
   if (json.data?.ohlcv) return json.data.ohlcv;
   return [];
 }
+
+export interface DashboardStats {
+  net_pnl: number
+  net_pnl_change: number
+  win_rate: number
+  win_rate_change: number
+  profit_factor: number
+  max_drawdown: number
+  avg_rr_ratio: number
+  total_trades: number
+  wins: number
+  losses: number
+  month: string
+}
+
+export interface PnLSeriesPoint {
+  date: string
+  display: string
+  pnl: number
+  cumulative_pnl: number
+}
+
+export interface PnLSeriesResponse {
+  series: PnLSeriesPoint[]
+}
+
+export interface CalendarDay {
+  date: string
+  day: number
+  pnl: number
+  trades: number
+  positive: boolean | null
+}
+
+export interface CalendarResponse {
+  month: string
+  days: CalendarDay[]
+}
+
+export async function fetchDashboardStats(month?: string): Promise<DashboardStats> {
+  const params = month ? `?month=${month}` : ''
+  const resp = await authFetch(`/api/v1/dashboard/stats${params}`)
+  return resp.json()
+}
+
+export async function fetchPnLSeries(date_from: string, date_to: string): Promise<PnLSeriesResponse> {
+  const resp = await authFetch(`/api/v1/dashboard/pnl-series?date_from=${date_from}&date_to=${date_to}`)
+  return resp.json()
+}
+
+export async function fetchCalendarData(month: string): Promise<CalendarResponse> {
+  const resp = await authFetch(`/api/v1/dashboard/calendar?month=${month}`)
+  return resp.json()
+}

@@ -77,19 +77,19 @@ const LevelsPage: React.FC = () => {
 
   return (
     <div className="space-y-4 max-w-[1400px] mx-auto">
-      <div className="card-surface p-3 flex flex-wrap items-center gap-3">
+      <div className="bg-white border border-[#EEF0F3] rounded-xl p-3 flex flex-wrap items-center gap-3" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
         <input
           type="text"
           value={symbol}
           onChange={(e) => setSymbol(e.target.value.toUpperCase())}
           onKeyDown={(e) => e.key === 'Enter' && fetchLevels()}
-          className="w-24 px-3 py-1.5 rounded-lg bg-[var(--bg-elevated)] border border-[var(--bg-border)] text-sm font-mono text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)] uppercase"
+          className="w-24 px-3 py-1.5 rounded-lg bg-[#F8F9FC] border border-[#EEF0F3] text-sm font-mono text-[#1A202C] focus:outline-none focus:border-[#6C5CE7] uppercase"
           placeholder="SPY"
         />
         <select
           value={filterMitigated}
           onChange={(e) => setFilterMitigated(e.target.value)}
-          className="px-2 py-1.5 rounded-lg bg-[var(--bg-elevated)] border border-[var(--bg-border)] text-xs text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]"
+          className="px-2 py-1.5 rounded-lg bg-[#F8F9FC] border border-[#EEF0F3] text-xs text-[#1A202C] focus:outline-none focus:border-[#6C5CE7]"
         >
           <option value="all">All Levels</option>
           <option value="unmitigated">Unmitigated Only</option>
@@ -97,21 +97,20 @@ const LevelsPage: React.FC = () => {
         </select>
         <button
           onClick={fetchLevels}
-          className="px-3 py-1.5 text-xs font-semibold rounded-lg cursor-pointer"
-          style={{ background: 'var(--accent)', color: '#fff' }}
+          className="px-3 py-1.5 text-xs font-semibold rounded-lg cursor-pointer bg-[#6C5CE7] text-white"
         >
           Refresh
         </button>
       </div>
 
       {error && (
-        <div className="text-xs text-[var(--fail)] bg-[var(--fail-dim)] rounded-lg px-4 py-2">{error}</div>
+        <div className="text-xs text-[#E17055] bg-[#FEF2F2] rounded-lg px-4 py-2">{error}</div>
       )}
 
-      <div className="card-surface overflow-x-auto">
+      <div className="bg-white border border-[#EEF0F3] rounded-xl overflow-x-auto" style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}>
         <table className="w-full text-xs">
           <thead>
-            <tr className="border-b border-[var(--bg-border)] text-[var(--text-tertiary)]">
+            <tr className="border-b border-[#EEF0F3] text-[#9CA3AF]">
               <th className="text-left px-3 py-2 font-medium">Type</th>
               <th className="text-right px-3 py-2 font-medium">Price</th>
               <th className="text-center px-3 py-2 font-medium">Direction</th>
@@ -124,7 +123,7 @@ const LevelsPage: React.FC = () => {
           </thead>
           <tbody>
             {levels.map((level) => (
-              <tr key={level.id} className="border-b border-[var(--bg-border)] hover:bg-[var(--bg-hover)]">
+              <tr key={level.id} className="border-b border-[#EEF0F3] hover:bg-[#F5F3FF]">
                 <td className="px-3 py-2">
                   <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold" style={{
                     color: LEVEL_TYPE_COLORS[level.level_type] || '#71717A',
@@ -133,14 +132,14 @@ const LevelsPage: React.FC = () => {
                     {level.level_type}
                   </span>
                 </td>
-                <td className="px-3 py-2 text-right font-mono text-[var(--text-primary)] font-semibold">
+                <td className="px-3 py-2 text-right font-mono text-[#1A202C] font-semibold">
                   ${level.price.toFixed(2)}
                 </td>
                 <td className="px-3 py-2 text-center">
                   {level.direction && (
                     <span className={`text-[10px] font-medium ${
                       level.direction === 'bullish' || level.direction === 'BULLISH'
-                        ? 'text-[var(--pass)]' : 'text-[var(--fail)]'
+                        ? 'text-[#00B894]' : 'text-[#E17055]'
                     }`}>
                       {level.direction.toUpperCase()}
                     </span>
@@ -149,13 +148,13 @@ const LevelsPage: React.FC = () => {
                 <td className="px-3 py-2 text-center font-mono font-semibold" style={{ color: scoreColor(level.confluence_score) }}>
                   {level.confluence_score.toFixed(0)}
                 </td>
-                <td className="px-3 py-2 text-center text-[var(--text-dim)] capitalize">{level.strength}</td>
-                <td className="px-3 py-2 text-center text-[var(--text-dim)]">{level.time_frame}</td>
+                <td className="px-3 py-2 text-center text-[#9CA3AF] capitalize">{level.strength}</td>
+                <td className="px-3 py-2 text-center text-[#9CA3AF]">{level.time_frame}</td>
                 <td className="px-3 py-2 text-center">
                   <button
                     onClick={() => handleToggleMitigated(level)}
                     className={`text-[10px] px-2 py-0.5 rounded-full cursor-pointer border-none ${
-                      level.is_mitigated ? 'text-[var(--fail)] bg-[var(--fail-dim)]' : 'text-[var(--pass)] bg-[var(--pass-dim)]'
+                      level.is_mitigated ? 'text-[#E17055] bg-[#FEF2F2]' : 'text-[#00B894] bg-[#F0FDF4]'
                     }`}
                   >
                     {level.is_mitigated ? 'Yes' : 'No'}
@@ -166,7 +165,7 @@ const LevelsPage: React.FC = () => {
                     <button
                       onClick={() => handleToggleFavorite(level)}
                       className={`p-1 rounded cursor-pointer border-none ${
-                        level.is_favorite ? 'text-[#F59E0B]' : 'text-[var(--text-dim)] hover:text-[var(--text-secondary)]'
+                        level.is_favorite ? 'text-[#F59E0B]' : 'text-[#9CA3AF] hover:text-[#6B7280]'
                       }`}
                       title="Toggle favorite"
                     >
@@ -175,7 +174,7 @@ const LevelsPage: React.FC = () => {
                     {level.id && (
                       <button
                         onClick={() => handleDelete(level.id!)}
-                        className="p-1 rounded text-[var(--text-dim)] hover:text-[var(--fail)] cursor-pointer border-none"
+                        className="p-1 rounded text-[#9CA3AF] hover:text-[#E17055] cursor-pointer border-none"
                         title="Delete level"
                       >
                         <Trash2 size={13} />
@@ -186,10 +185,10 @@ const LevelsPage: React.FC = () => {
               </tr>
             ))}
             {levels.length === 0 && !loading && (
-              <tr><td colSpan={8} className="px-3 py-8 text-center text-[var(--text-dim)] text-xs">No saved levels</td></tr>
+              <tr><td colSpan={8} className="px-3 py-8 text-center text-[#9CA3AF] text-xs">No saved levels</td></tr>
             )}
             {loading && (
-              <tr><td colSpan={8} className="px-3 py-8 text-center shimmer text-[var(--text-dim)] text-xs">Loading...</td></tr>
+              <tr><td colSpan={8} className="px-3 py-8 text-center shimmer text-[#9CA3AF] text-xs">Loading...</td></tr>
             )}
           </tbody>
         </table>
