@@ -94,6 +94,10 @@ def create_app() -> FastAPI:
     async def health():
         return {"status": "ok"}
 
+    @app.get("/health")
+    async def health_root():
+        return {"status": "ok"}
+
     app.include_router(v1_router)
     return app
 
