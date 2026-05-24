@@ -90,6 +90,10 @@ def create_app() -> FastAPI:
         print(f"Rate limiting disabled: {e}")
     app.add_exception_handler(AppException, app_exception_handler)
 
+    @app.get("/api/v1/health")
+    async def health():
+        return {"status": "ok"}
+
     app.include_router(v1_router)
     return app
 
